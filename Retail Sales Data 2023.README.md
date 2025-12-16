@@ -44,15 +44,6 @@
 - Tableau - Data Visualisation
 
 ## Data Analysis and Wrangling Procedures on R Studio
-#### Start by installing the necessary packages for this data analysis process.
-
-```R
-Install.packages("tidyverse")
-Install.packages("dplyr")
-Install.packages("skimr")
-Install.packages("janitor")
-Install.packages("lubridate")
-```
 
 #### Load the library of the installed packages.
 
