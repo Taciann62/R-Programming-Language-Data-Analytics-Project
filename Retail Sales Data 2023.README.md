@@ -96,8 +96,7 @@ names(Retail_sales)`
 
 #### Note: The product _category are 3: *Beauty, Clothing, Electronics*
   ```R
-  dim(Retail_sales) *<- shows the last few rows of the dataset*
-
+  dim(Retail_sales) 
  str_length(Retail_sales$Age)
 ```
 
