@@ -116,18 +116,24 @@ unique(Retail_sales)
 ```R
 Retail_sales$Total_Amount<-(Retail_sales$Quantity*Retail_sales$Price_per_Unit)
 ```
+### The dataset was reviewed again, and it was observed that the monthly data collected exceeded the annual count, as it contains data from January 2024.
 
+```R
+Retail_sales<-Retail_sales %>%
+    filter(Year==2023)
+
+```
 #### 1. How much was generated overall in 2023? 
 ```R
 Total_rev_2023<-sum(Retail_sales$Total_Amount)
 ```
-##### Result =  456,000
+##### Result =  454,470
 
 #### 2. How much is the average amount generated in 2023?
 ```R
 Avg_rev_2023<-mean(Retail_sales$Total_Amount)
 ```
-##### Result = 456
+##### Result = 455.38
 
 ### Create Table of Revenue Generated
 
