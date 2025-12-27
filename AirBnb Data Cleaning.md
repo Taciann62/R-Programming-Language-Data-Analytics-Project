@@ -136,7 +136,7 @@ boxplot(AB_NYC$price , main = "Boxplot of Price", ylab = "Total Prices", col = "
 AB_NYC <-AB_NYC %>% 
   mutate(price = as.numeric(price))
 ```
-Drop rows where prices = 0 so as to easily apply IQR to yield clear result and remove necessary outliers
+Drop rows where prices = 0 so as to easily apply IQR to yield clear result and remove necessary outliers. This was done because some of the prices had 0 which is invalid when it comes to the currency and the prices were not specified and also, did not match the minimum per night.
 ```R
 AB_NYC <- AB_NYC %>%
   filter(price > 0)
