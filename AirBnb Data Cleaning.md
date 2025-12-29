@@ -142,8 +142,13 @@ AB_NYC <- AB_NYC %>%
   filter(price > 0)
 ```
 This further dropped the rows from 48895 to 45912
-### Detecting and Fixing Outliers. 1. Calculate IQR for Price
+### Detecting and Fixing Outliers.  The Interquartile Range (IQR) method was applied to the price variable:
+Q1 (25th percentile): $69
+Q3 (75th percentile): $175
+Upper bound: $334
+Listings priced above $334 per night were classified as statistical outliers and removed to reduce skewness and improve the accuracy of summary statistics.   
 
+```
 quantile(AB_NYC$price)
    Result: 0%   25%   50%   75%  100% 
            10    69   106   175 10000 
@@ -162,16 +167,23 @@ summary(AB_NYC$price)
 Result:  
   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   10.0    69.0   106.0   152.7   175.0 10000.0 
+```
 
 # Create a cleaned dataframe by filtering out outliers
+```R
 AB_NYC_Final <- AB_NYC %>%
   filter(price >= lower_bound & price <= upper_bound)
 
 summary(AB_NYC_Final$price)
 Result: Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 10      65     100     120     159     334 
+```
 
-## plot
+After treatment: Median price reduced from $106 to $100
+                 Mean price reduced from $152.7 to $120
+                 Maximum valid price capped at $334
+This resulted in a more representative price distribution for analysis, as shown below, in comparison to the previous chart.
+
 ```R
 library(ggplot2)
 
@@ -180,7 +192,7 @@ boxplot(AB_NYC_Final$price, main = "Boxplot of Price", ylab = "Total Prices", co
 <img width="533" height="376" alt="Airbnb Price Wout Outliers" src="https://github.com/user-attachments/assets/057f3995-5d6e-46eb-be7b-0a58fe5c15b5" />
 
 ## Segment the reviews
-
+```
 AB_NYC_Final <- AB_NYC_Final %>%
   mutate(review_segment  = case_when(
     reviews_per_month  >= 0   & reviews_per_month  <= 2.99 ~ "Poor",
@@ -188,34 +200,27 @@ AB_NYC_Final <- AB_NYC_Final %>%
     reviews_per_month  >= 6.00 & reviews_per_month  <= 7.99 ~ "High",
     reviews_per_month  >= 8.00 & reviews_per_month  <= 9.99 ~ "Excellent",
      reviews_per_month >= 10.00 & reviews_per_month <= 80.99 ~ "Outbound", TRUE ~ NA_character_ ))
-
+```
 After cleaning and removing invalid and extreme pricing values, Airbnb listings showed a strong concentration between $65–$175 per night. Listings priced above $334 were identified as statistical outliers and removed to prevent skewed summaries. Review segmentation revealed that most listings fall within the “Poor” to “Good” engagement range, indicating opportunities for hosts to improve visibility and guest interaction.
 
+### Aggregated Analysis
+Listings were grouped by room type and neighbourhood group to compute:
+Total number of reviews
+Average reviews per listing
+Total host listings
+Average host activity
+Listing counts by category
 
-unique(AB_NYC_Final$reviews_per_month)
+This aggregation supports downstream visualization and comparative market analysis.
 
-summary(AB_NYC_Final$reviews_per_month)
+Insights Derived
+Airbnb prices in NYC are heavily concentrated between $65 and $175 per night
+Most listings fall into the Poor to Good review engagement segments, suggesting opportunities for hosts to improve visibility and customer interaction
+Manhattan and Brooklyn dominate both pricing and review activity, by month and room type.
 
-sum(AB_NYC_Final$number_of_reviews)
-
-AB_NYC_Final <- AB_NYC_Final %>% 
- mutate(calculated_host_listings_count = as.numeric(calculated_host_listings_count))
-
-Reviews <- AB_NYC_Final %>% 
-  group_by(room_type, neighbourhood_group) %>% 
-   summarise(Total_reviews = sum(number_of_reviews), average_reviews = mean(number_of_reviews),
-            Hosting = sum(calculated_host_listings_count), average_hosting = mean(calculated_host_listings_count), Room_type_count = n(), .groups = "drop")
-
-summary(AB_NYC$reviews_per_month)
-
-AB_NYC_Final <-AB_NYC_Final %>% 
-  mutate(reviews_per_month = as.numeric(reviews_per_month))
-
-
-library(readr)
 
 write.csv(AB_NYC_Final, "AB_NYC_Analysis_Final.csv", row.names = FALSE)
 
-getwd()
+
 
 
