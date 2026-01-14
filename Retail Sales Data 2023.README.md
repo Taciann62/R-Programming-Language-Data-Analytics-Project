@@ -1,7 +1,6 @@
 # Retail Sales Data 2023 
 
 
-
 ## Introduction
 
 This data analytics project was completed as part of the Oasis Infobyte internship program requirements (December Batch 2025).
